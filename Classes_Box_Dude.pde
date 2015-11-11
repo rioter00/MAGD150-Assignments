@@ -25,3 +25,5 @@ void drawBoxDude(){
   rect(centerX+offset1, centerY+offset2, 20, 20);
   rect(centerX-offset2, centerY-offset2, 20, 20);
 }
+
+// whatever
