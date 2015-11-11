@@ -30,13 +30,7 @@ class BoxDude{
     centerY = round(random(-5, 5)) + centerY;
   }
 }
-
-BoxDude myBoxDude;
-BoxDude specialBoxDude;
-
-void setup(){
-  background(255);
-  size(800,600);
+0,600);
   myBoxDude = new BoxDude();
   specialBoxDude = new BoxDude(100, 100, 10, 30);
 }
@@ -46,3 +40,7 @@ void draw(){
   myBoxDude.display();
   specialBoxDude.display();
 }
+
+
+BoxDude myBoxDude;
+BoxDude specialBoxDude;
