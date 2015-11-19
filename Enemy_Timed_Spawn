@@ -1,0 +1,51 @@
+// CircleEnemy Class
+class CircleEnemy{
+  int centerX, centerY, size;
+  
+  // constructor
+  CircleEnemy(){
+    centerX = round(random(width));
+    centerY = 10;
+    size = round(random(50, 100));
+  }
+  
+  // update position
+  void update(){
+    centerX = round(random(-10,10)) + centerX;
+    centerY = centerY + 1;
+  }
+  // display the enemy after the position is updated
+  void display(){
+    fill(255,10,68);
+    ellipse(centerX, centerY, size, size);
+  }
+}
+// End of class code
+
+CircleEnemy[] enemies;                          // declare an array of enemies
+Timer myTimer;                                  // declare a new instance of timer class
+int numberEnemies;                              // number of enemies from the array
+void setup(){
+  size(800, 600);    
+  enemies = new CircleEnemy[1000];              // create the array with 1000 slots
+  for(int x = 0; x < enemies.length-1; x++){    // create 1000 instances of CircleEnemy to the array
+    enemies[x] = new CircleEnemy();
+  }
+  myTimer = new Timer(2000);                     // sets timer to 2 seconds
+}
+
+void draw(){
+  background(255);
+  if(myTimer.isFinished()){                      // whenever the timer goes off, add other enemy
+    numberEnemies++;                             // increase the number of enemies
+    myTimer.restart(); // restart the timer      // restart the timer everytime the timer goes off
+  }
+  if (numberEnemies == enemies.length-1){         // incase we run out of enemies, restart the count
+    numberEnemies = 0;
+  }
+  //this for loops handles the number of enemies. 
+  for(int newEnemies = numberEnemies; newEnemies > 0 ; newEnemies --){    //  keep track of all the previous
+    enemies[newEnemies].update();                                         //  enemies 'spawned'.
+    enemies[newEnemies].display();
+  }
+}
