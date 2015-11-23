@@ -1,24 +1,30 @@
 class Timer{
-  int savedTime;  // When Timer started
-  int totalTime;  // How long Timer should last
+  float startTime, stopTime; // two variables to keep track of the time that the timer starts and length of time for the timer.
   
-  // The constructor, set how long the Timer last with integer value
-  Timer(int _totalTime){
-    totalTime = _totalTime;
+  //constructor. This sets the amount of the time to lapse before it sets the boolean below to true. 
+  // an example use would be 
+  // Timer myTimer = new Timer(2000);    <---- that sets the timer to 2 seconds.
+  Timer(float _stopTime){
+    stopTime = _stopTime;
   }
   
-  // Start the Timer
-  void start() {
-    savedTime = millis();
+  // you can call this anyway (inside the Setup which would start almost immediately or inside the draw loop, which would make 
+  // it restart ever cycle.
+  void timerStart(){
+    startTime = millis();
   }
   
-  boolean isFinished() {
-   // check how much time has passed
-   int passedTime = millis() - savedTime;
-   if (passedTime > totalTime) {
-     return true;
-   } else {
-     return false;
-   }
+  // place this in your draw() loop to cheen the time has lapse.
+  // an example block of code might be:
+  //   if (myTimer.isFinished(){
+  //      text("EXPLOSION!", 100, 100);
+  //    }
+  boolean isFinished(){
+    float passedTime = millis() - startTime;
+    if(passedTime > stopTime) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
