@@ -1,0 +1,23 @@
+// CircleEnemy Class
+class CircleEnemy{
+  int centerX, centerY, size;
+  
+  // constructor
+  CircleEnemy(){
+    centerX = round(random(width));
+    centerY = 10;
+    size = round(random(50, 100));
+  }
+  
+  // update position
+  void update(){
+    centerX = round(random(-10,10)) + centerX;
+    centerY = centerY + 1;
+  }
+  // display the enemy after the position is updated
+  void display(){
+    fill(255,10,68);
+    ellipse(centerX, centerY, size, size);
+  }
+}
+// End of enemy class code
