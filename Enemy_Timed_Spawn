@@ -20,7 +20,46 @@ class CircleEnemy{
     ellipse(centerX, centerY, size, size);
   }
 }
-// End of class code
+// End of enemy class code
+
+
+class Timer{
+  float startTime, stopTime; // two variables to keep track of the time that the timer starts and length of time for the timer.
+   boolean started = false;  // keep track of the timer, where it's been started on not. 
+  
+  //constructor. This sets the amount of the time to lapse before it sets the boolean below to true. 
+  // an example use would be 
+  // Timer myTimer = new Timer(2000);    <---- that sets the timer to 2 seconds.
+  Timer(float _stopTime){
+    stopTime = _stopTime;
+  }
+  
+  // you can call this anyway (inside the Setup which would start almost immediately or inside the draw loop, which would make 
+  // it restart ever cycle.
+  void timerStart(){
+    startTime = millis();
+    started = true;
+  }
+  
+  void stopTimer(){
+    started = false;
+    println("time stopped");
+  }
+  
+  // place this in your draw() loop to cheen the time has lapse.
+  // an example block of code might be:
+  //   if (myTimer.isFinished(){
+  //      text("EXPLOSION!", 100, 100);
+  //    }
+  boolean isFinished(){
+    float passedTime = millis() - startTime;
+    if((passedTime > stopTime) && (started)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
 
 CircleEnemy[] enemies;                          // declare an array of enemies
 Timer myTimer;                                  // declare a new instance of timer class
@@ -31,14 +70,15 @@ void setup(){
   for(int x = 0; x < enemies.length-1; x++){    // create 1000 instances of CircleEnemy to the array
     enemies[x] = new CircleEnemy();
   }
-  myTimer = new Timer(2000);                     // sets timer to 2 seconds
+  myTimer = new Timer(2000);     // sets timer to 2 seconds
+  myTimer.timerStart();
 }
 
 void draw(){
   background(255);
   if(myTimer.isFinished()){                      // whenever the timer goes off, add other enemy
     numberEnemies++;                             // increase the number of enemies
-    myTimer.restart(); // restart the timer      // restart the timer everytime the timer goes off
+    myTimer.timerStart(); // restart the timer      // restart the timer everytime the timer goes off
   }
   if (numberEnemies == enemies.length-1){         // incase we run out of enemies, restart the count
     numberEnemies = 0;
