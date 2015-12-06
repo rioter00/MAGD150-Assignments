@@ -1,0 +1,24 @@
+
+BoxDude myBoxDude;
+BoxDude specialBoxDude;
+Timer myTimer;
+CShip myCShip;
+
+void setup(){
+  size(800,600);
+  myBoxDude = new BoxDude();
+  specialBoxDude = new BoxDude(100, 100, 10, 30);
+  myTimer = new Timer(3000);
+  myCShip = new CShip();
+}
+
+void draw(){
+  //myBoxDude.move();
+  myBoxDude.display();
+  specialBoxDude.display();
+  if (myTimer.isFinished() == true){
+    ellipse(300, 300, 200, 200);
+  }
+  myCShip.move();
+  myCShip.display();
+}
