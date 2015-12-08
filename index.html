@@ -2,10 +2,32 @@
   <header>
   <script src="https://raw.githubusercontent.com/processing-js/processing-js/v1.4.8/processing.js"></script>
   </header>
-  <h1>Your Sketch1 Title</h1>
+  <h1>My first ever processing sketch </h1>
   <script type="text/processing" data-processing-target="mycanvas1">
   
-  <!-- Your sketch1 goes here -->
+ int theta = 0;
+int diagonalSlide = 0;
+color newColor;
+void setup(){
+  size(800, 600); 
+}
+
+void draw(){
+  if(keyPressed){
+    int a = round(random(255));
+    int b = round(random(255));
+    int c = round(random(255));
+    newColor = color (a,b,c);
+  }
+  background(newColor);
+  
+  translate(diagonalSlide, diagonalSlide);
+  theta += 10;
+  rotate((theta));
+  rect(0, 0, 200, 200);
+  rect(-200,-200, 200, 200);
+  diagonalSlide++;
+}
 
   </script>
   <canvas id="mycanvas1"></canvas>
