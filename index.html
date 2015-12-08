@@ -5,18 +5,19 @@
   <h1>Your Sketch Title</h1>
   <script type="text/processing" data-processing-target="mycanvas1">
   
+  PImage nickAndBae;
+
+  void setup(){
+  size(600, 800);
+  nickAndBae = loadImage("nick&bae.jpg");
+  }
+
+  void draw(){
+  image(nickAndBae, 100, 100, 250, 300);
+  noLoop();
+  }
   
-      PImage nickAndBae;
-    
-    void setup(){
-      size(600, 800);
-      nickAndBae = loadImage("https://cloud.githubusercontent.com/assets/2087820/11647542/b4af11d2-9d2e-11e5-9b9e-1b5ef52a30b7.jpg");
-    }
-    
-    void draw(){
-      image(nickAndBae, 100, 100, 250, 300);
-      noLoop();
-    }
+  
 
   </script>
   <canvas id="mycanvas1"></canvas>
