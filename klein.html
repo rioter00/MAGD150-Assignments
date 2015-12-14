@@ -13,370 +13,102 @@
         <br />
         <br />
   <h1>Orb_of_Power.pde</h1>
-  <script type="text/processing" data-processing-target="mycanvas1">
-  
-int player1x = 60;
-int player2x = 940;
-int player1y = 60;
-int player2y = 540;
-int speed = 20;
-float player1health = 100;
-float player2health = 100;
-boolean game = false;
-float orbx = 500;
-float orby = 300;
-boolean menu = true;
 
-void setup(){
-  size(1010, 600);
-} //end setup
+Skip to content
+This repository
 
-void draw(){
-  if (player1health < 1) {
-   player2wins();
- }
+    Pull requests
+    Issues
+    Gist
+
+    @rioter00
+
+1
+0
+
+    1
+
+ZombyKillr/JacobKleinFiles
+Code
+Issues 1
+Pull requests 0
+Wiki
+Pulse
+Graphs
+JacobKleinFiles/Klein-LabWednesday-AssignmentFour
+2008112 on Oct 4
+@ZombyKillr ZombyKillr Create Klein-LabWednesday-AssignmentFour
+1 contributor
+65 lines (54 sloc) 1.06 KB
+boolean x = false;
+boolean y = false;
+
+void setup() {
+  size(1281, 801);
+  fill(0);
+  textSize(40);
+  text("The Gambler's Fallacy", 450, 40);
  
- if (player2health < 1) {
-   player1wins();
- }
-  
-  rectMode(CENTER);
-  if (menu == true) {
-    background(#87118E);
-    textSize(70);
-    fill(random(0, 255), random(0, 255), random(0, 255));
-    text("Orb of Power", 290, 75);
-    
-    //play button
-    noFill();
-    rect(515, 150, 300, 50);
-    fill(255);
-    textSize(45);
-    text("Play", 470, 165);
-    
-    //quit button
-    noFill();
-    rect(515, 250, 300, 50);
-    fill(250);
-    textSize(45);
-    text("Quit", 470, 265);
-    
-    //player 1 instructions
-    textSize(25);
-    fill(#38FA1C);
-    text("Player 1, use WASD to move", 10, 200);
-    text("Use C and V to shoot", 10, 230);
-    
-    //player 2 instructions
-    fill(#FF9100);
-    text("Player 2, use 8546 to move", 675, 200);
-    text("Use < and > to shoot", 675, 230);
-    
-    //orb instructions
-    textSize(45);
-    fill(random(0, 255), random(0, 255), random(0, 255));
-    text("Touching the Orb of Power restores health!", 40, 450);
-  }
-  
-  ellipseMode(CENTER);
-  rectMode(CORNER);
-  if (game == true) {
-  
-   background(#87118E);
-   
-   fill(255);
-   textSize(30);
-   text("Player 1 Health: " + round(player1health), 10, 30);
-   text("Player 2 Health: " + round(player2health), 700, 30);
-  
-  //player 1
-  fill(#38FA1C);
-  ellipse(player1x, player1y, 50, 50);
-  
-  if (player1x > width) {
-     player1x = width - 1;
-  }
-  
-  if (player1y > height) {
-     player1y = height - 1;
-  }
-  
-  if (player1y < 0) {
-     player1y = 1;
-  }
-
-if (player1x < 0) {
-     player1x = 1; 
-  }
-
-//player 2 
-  fill(#FF9100);
-  ellipse(player2x, player2y, 50, 50);
-  
-  if (player2x > width) {
-     player2x = width - 1;
-  }
-  
-  if (player2y > height) {
-     player2y = height - 1;
-  }
-  
-  if (player2y < 0) {
-     player2y = 1;
-  }
-
-if (player2x < 0) {
-     player2x = 1; 
-  }
-
-  }
-
-    orb();
-
-} 
-//end draw
-
-void keyPressed(){
-  
- //player 1 moving
-  
-  if (game == true) {
-  
-  if (key == 'd') {
-    player1x = player1x + speed;
-  }
-  if (key == 'a') {
-   player1x = player1x - speed;
-  }
-  if (key == 'w') {
-   player1y = player1y - speed; 
-  }
-  if (key == 's') {
-   player1y = player1y + speed; 
-  }
-
-//player 2 moving
-  
-  if (key == '6') {
-    player2x = player2x + speed;
-  }
-  if (key == '4') {
-   player2x = player2x - speed;
-  }
-  if (key == '8') {
-   player2y = player2y - speed; 
-  }
-  if (key == '5') {
-   player2y = player2y + speed; 
-  }
-
-
-//player 1 shooting
-
-  if (key == 'c') {
-    fill(#FFF81A);
-    rect(player1x, player1y, -120, 15);
-    if (player2x < player1x) { 
-      if (player2x > player1x - 150) {
-        if (player2y == player1y) {
-          player2hitbyBullet();
-        }
-        }
-      }
-    }
-  
-  
-  if (key == 'v') {
-    fill(#FFF81A);
-    rect(player1x, player1y, 120, 15);
-    if (player2x > player1x) { 
-      if (player2x < player1x + 150) {
-        if (player2y == player1y) {
-          player2hitbyBullet();
-        }
-      }
-    }
-  }
-
-//player 2 shooting
-  if (key == ',') {
-    fill(#FFF81A);
-    rect(player2x, player2y, -120, 15);
-    if (player1x < player2x) { 
-      if (player1x > player2x - 150) {
-        if (player1y == player2y) {
-          player1hitbyBullet();
-        }
-      }
-    }
-    
-  }
-
-  if (key == '.') {
-    fill(#FFF81A);
-    rect(player2x, player2y, 120, 15);
-    if (player1x > player2x) { 
-      if (player1x < player2x + 150) {
-        if (player1y == player2y) {
-          player1hitbyBullet();
-        }
-      }
-    }
-  }
-  }
-  
-  if (key == 'r') {
-    if (game == false) {
-      if (menu == false) {
-        game = true;
-        menu = false;
-        player1health = 100;
-        player2health = 100;
-        stroke(0);
-        player1x = 60;
-        player2x = 940;
-        player1y = 60;
-        player2y = 540;
-      }
-    }
-  }
-}  //end key pressed
-
-void player2hitbyBullet() {
- player2health = player2health - 2;
- fill(0);
- ellipse(player2x, player2y, 50, 50);
+  //Red Square
+  fill(255, 0, 0);
+  rect(380, 80, 60, 60);
  
- if (player2health < 1) {
-    player1wins();  
- }
+  //Red 50
+  textSize(25);
+  fill(0);
+  text("50%", 385, 115);
+  
+  //Black Square
+  fill(0);
+  rect(880, 80, 60, 60);
+  
+  //Black 50
+  textSize(25);
+  fill(255);
+  text("50%", 885, 115);
+
 }
 
-void player1hitbyBullet() {
- player1health = player1health - 2;
- fill(0);
- ellipse(player1x, player1y, 50, 50);
- 
- if (player1health < 1) {
-   player2wins();
- }
+void draw() {
+  //initial sqaures
+  if (x == true){
+  fill(255, 0, 0);
+  rect(100, 200, 80, 80);
+  rect(200, 200, 80, 80);
+  rect(300, 200, 80, 80);
+  rect(400, 200, 80, 80);
+  rect(500, 200, 80, 80);
+  rect(600, 200, 80, 80);
+  rect(700, 200, 80, 80);
+  rect(800, 200, 80, 80);
+  rect(900, 200, 80, 80);
+  fill(#0F9B06);
+  text("What's Next?", 1000, 190);
+  }
+  
+  //definition
+  if (y == true){
+  fill(255, 0, 0);
+  rect(1000, 200, 80, 80);
+  fill(0);
+  text("Believing that 'runs' occur to", 450, 400);
+  text("statistically independent phenomena", 400, 450);
+  text("such as roulette wheel spins", 450, 500);
+  }
 }
 
-void player1wins() {
- game = false;
- menu = false;
- background(0);
- fill(#38FA1C);
- textSize(80);
- text("The Greenians Win!", 125, 100);
- textSize(30);
- 
- for (int circles = 1; circles < 10; circles++) {
-   noFill();
-   stroke(#38FA1C);
-   ellipse(width / 2, height / 2, (circles * 40),  (circles * 40));
- }
- fill(random(0, 255), random(0, 255), random(0, 255));
-   ellipse(width / 2, height / 2, 40, 40);
-   fill(#38FA1C);
-textSize(30);
-   text("Press R to restart", 375, height - 30);
-   
-}
- void player2wins() {
-   game = false;
-   menu = false;
-   background(0);
-   fill(#FF9100);
-   textSize(80);
-   text("The Orangians Win!", 125, 100);
-   textSize(30);
-   text("Press R to restart", 375, height - 30);
-  
-  for (int circles = 1; circles < 10; circles++) {
-   noFill();
-   stroke(#FF9100);
-   ellipse(width / 2, height / 2, (circles * 40),  (circles * 40));
-  }
-  fill(random(0, 255), random(0, 255), random(0, 255));
-  ellipse(width / 2, height / 2, 40, 40);
+void mousePressed() {
+  x = true;
 }
 
-void orb() {
-  
-  if (game == true) {
-  
-  fill(random(0, 255), random(0, 255), random(0, 255));
-  ellipse(orbx, orby, 40, 40);
-  float orbChangex = (random(-10, 10));
-  float orbChangey = (random(-10, 10));
-  orbx = orbx + orbChangex;
-  orby = orby + orbChangey;
-  
-  if (orbx > width) {
-     orbx = width - 1;
-  }
-  
-  if (orby > height) {
-     orby = height - 1;
-  }
-  
-  if (orby < 0) {
-     orby = 1;
-  }
-
-if (orbx < 0) {
-     orbx = 1; 
-  }
-  
-  if (orbx < player1x + 50) {
-    if (orbx > player1x - 50) {
-      if (orby > player1y - 50) {
-        if (orby < player1y + 50) {
-        player1health = player1health + 0.05;
-      }
-    }
-  }
- }
- 
- if (orbx < player2x + 50) {
-    if (orbx > player2x - 50) {
-      if (orby > player2y - 50) {
-        if (orby < player2y + 50) {
-        player2health = player2health + 0.05;
-      }
-    }
-  }
- }
- 
- if (player2health > 100) {
-   player2health = 100;
- }
- 
- if (player1health > 100) {
-   player1health = 100;
- }
-  
-  }
+void keyPressed() {
+  y = true;
 }
-   
-   void mousePressed() {
-     if (menu == true) {
-       if (game == false) {
-         if (mouseX > 215 && mouseX < 815 && mouseY < 200 && mouseY > 100) {
-           game = true;
-           menu = false;
-         }
-       }
-     }
-     if (menu == true) {
-       if (game == false) {
-         if (mouseX > 215 && mouseX < 815 && mouseY < 300 && mouseY > 100) {
-           exit();
-         }
-       }
-     }
- }
+
+    Status API Training Shop Blog About Pricing 
+
+    © 2015 GitHub, Inc. Terms Privacy Security Contact Help 
+
 
   </script>
   <canvas id="mycanvas1"></canvas>
