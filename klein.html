@@ -4,469 +4,335 @@
   </header>
  <script type="text/processing" data-processing-target="mycanvas1">
 
-//Theme: Zombies
-//Use WASD to move
-//Click to shoot
-//Different guns affect your speed and crosshair size
-//Special zombies could spawn in, that do different things. *COULD NOT ADD IN TIME*
+ PImage fal;
+PImage fight;
+PImage darth;
 
-Player myPlayer;
-TimerforSpawning myTimer;
-Zombies myZombies;
-MainMenu theMenu;
-Store theStore;
-Shooting myShooting;
-Dead isDead;
-boolean menu = true;
-boolean game = false;
-boolean store = false;
-int gun = 1;
-boolean shooting = false;
-boolean dead = false;
+float moonX = 1360;
+float moonY = 205;
+float moonSpeed = -.3;
 
-void setup() {
-  size(800, 600); //width, height
-  myPlayer = new Player();
-  theMenu = new MainMenu();
-  theStore = new Store();
-  myZombies = new Zombies();
-  myTimer = new TimerforSpawning(1000);
-  myShooting = new Shooting();
-}
+MillFalcon myMillFalcon;
+Timer myTimer;
+TieFighter[] tiefighters;
+int numberTieFighters;
 
-void draw() {
+boolean hit = false;
 
-  if (menu == true && game == false && store == false) {
-    theMenu.display();
-    myTimer.start();
+
+int pressed = 0;
+int pressedState = 0;
+boolean mState = false;
+
+void setup(){
+  size(1300,800);
+  fal = loadImage("https://cloud.githubusercontent.com/assets/16195622/11784670/420d2ce4-a243-11e5-96ca-a04880d050a9.png");
+  fight = loadImage("https://cloud.githubusercontent.com/assets/16195622/11784681/4ca715a2-a243-11e5-8748-4fdbce3add29.jpg");
+  darth = loadImage("https://cloud.githubusercontent.com/assets/16195622/11784676/49b17978-a243-11e5-8bfc-5d9e87b7dcef.jpg");
+ 
+  myMillFalcon = new MillFalcon();
+  
+  tiefighters = new TieFighter[100];
+  for(int x = 0; x < tiefighters.length-1; x++){
+    tiefighters[x] = new TieFighter();
   }
-
-  if (menu == false && game == false && store == true) {
-    theStore.load();
-    myTimer.start();
-  }
-
-  if (menu == false && store == false && game == true) {
-
-    if (!myTimer.isDone()) {
-      canSpawn = false;
-    } else {
-      canSpawn = true;
-    }
-
-    background(#2D8907);
-    myShooting.crosshair();
-    myPlayer.display();
-    myPlayer.update();
-
-
-    if (canSpawn == true) {
-
-      myZombies.display();
-      myZombies.update();
-    }
-
-    if (keyPressed == false) {
-      yspeed = 0;
-      xspeed = 0;
-    }
-  }
-}
-
-void keyPressed() { 
-  //basic WASD moving
-  if (key == 'w') {
-    yspeed = -5;
-    if (gun == 4) {
-      yspeed = -3;
-    }
-    if (gun == 2) {
-      yspeed = -7;
-    }
-    if (gun == 3) {
-      yspeed = -4;
-    }
-  }
-  if (key == 's') {
-    yspeed = 5;
-    if (gun == 4) {
-      yspeed = 3;
-    }
-    if (gun == 2) {
-      yspeed = 7;
-    }
-    if (gun == 3) {
-      yspeed = 4;
-    }
-  }
-  if (key == 'a') {
-    xspeed = -5;
-    if (gun == 4) {
-      xspeed = -3;
-    }
-    if (gun == 2) {
-      xspeed = -7;
-    }
-    if (gun == 3) {
-      xspeed = -4;
-    }
-  }
-  if (key == 'd') {
-    xspeed = 5;
-    if (gun == 4) {
-      xspeed = 3;
-    }
-    if (gun == 2) {
-      xspeed = 7;
-    }
-    if (gun == 3) {
-      xspeed = 4;
-    }
-  }
-
-  if (menu == false && game == false && store == true) {
-    if (key == ' ') {
-      menu = false;
-      store = false;
-      game = true;
-    }
-    if (key == 'g') {
-      menu = false;
-      store = false;
-      game = false;
-    }
-  }
-}
-
-void mousePressed() {
-  if (menu == true && game == false && store == false) { //clicking the play button
-    if (mouseX < (width / 2) + 150 && mouseX > (width / 2) - 150 && mouseY < (height - 200) + 50 && mouseY > (height - 200) - 50) {
-      menu = false;
-      game = false;
-      store = true;
-    }
-  }
-
-  if (menu == false && game == false && store == true) { //choosing your gun
-    if (mouseX < 300 && mouseX > 0 && mouseY > 0 && mouseY < 200) { //choosing beretta
-      gun = 1;
-    }
-
-    if (mouseX > 400 && mouseX < 600 && mouseY > 0 && mouseY < 200) { //choosing uzi
-      gun = 2;
-    }
-
-    if (mouseX > 0 && mouseX < 300 && mouseY < 480 && mouseY > 280) { //choosing desert eagle
-      gun = 3;
-    }
-
-    if (mouseX > 360 && mouseX < 600 && mouseY > 280 && mouseY < height) { //choosing m4a1
-      gun = 4;
-    }
-  }
-}
-
-class Dead {
-
-  void display() {
-    game = false;
-    menu = false;
-    store = false;
-
-    background(0);
-    fill(255, 0, 0);
-    textSize(50);
-    text("YOU HAVE DIED", 200, 200);
-    text("YOU SURVIVED " + wave + " ROUNDS", 100, 240);
-    text("TOTAL KILLS: " + kills, 200, 280);
-  }
-}
-
-class MainMenu {
-
-  void display() {
-    background(0);
-    textSize(60);
-    fill(255, 0, 0);
-    text("magZ", (width / 2) - 90, 50);
-    text("The Fight for Survival", 90, 120); 
-    text("In Game Design", 170, 180);
-
-    rectMode(CENTER); 
-    //play button
-    fill(255, 0, 0);
-    rect(width / 2, height - 200, 300, 100);
-
-    textSize(50);
-    fill(0);
-    text("PLAY", (width / 2) - 60, height - 180);
-
-    if (mouseX < (width / 2) + 150 && mouseX > (width / 2) - 150 && mouseY < (height - 200) + 50 && mouseY > (height - 200) - 50) { //click button
-      rectMode(CENTER);
-      fill(255);
-      rect(width / 2, height - 200, 300, 100);
-
-      textSize(50);
-      fill(0);
-      text("PLAY", (width / 2) - 60, height - 180);
-    }
-  }
+  //myTimer = new Timer(10000);
+  myTimer = new Timer(round(random(2000,5000)));     // set timer to randomly bring tie 
+  myTimer.timerStart();                              //  fighters on between 2-5 seconds
+  
+  frameRate(30);
   
 }
+void draw(){
+  if (mState == false){
+    GameStart();
+    
+  } else{
+    FalconFight();
+//timer for tie fighters to come on screen
+    if (myTimer.isFinished()){
+      numberTieFighters++;
+      myTimer.timerStart();
+  }
+  
+   
+    if (numberTieFighters == tiefighters.length-1){
+      numberTieFighters = 0;
+    }
+    for (int newTieFighters = numberTieFighters; newTieFighters > 0; newTieFighters --){
+      tiefighters[newTieFighters].move();
+      tiefighters[newTieFighters].display();
+      
+      if (myMillFalcon.intersect( tiefighters[newTieFighters])){
+        //println("collision!" + newTieFighters);
+        hit = true;
+       }
+    }
+    myMillFalcon.update();
+    //myMillFalcon.laser();
+    myMillFalcon.display();
+   
+     if(hit){
+       YouLose();
+     }
+  }
+}
+
+  void mousePressed(){
+  mState = !mState;
+}
+
+//Start of the Game
+void GameStart(){
+  image(fight,0,0);
+ 
+}
+
+
+//Actual Game
+void FalconFight(){
+  background(93,229,255);
+  int x = 650;
+  int spacing = 90;
+  int wid = width;
+  noStroke();
+  fill(90,222,247);
+  for (int y = 0; y <= width; y += spacing){
+    rect(x,y,wid,60);
+  }
+  //Moon moving across the sky
+  fill(208,219,164);
+  strokeWeight(3);
+  stroke(164,173,129);
+  
+  moonX = moonX + moonSpeed;
+  
+  ellipse(moonX,moonY,150,150);
+  fill(244,255,201);
+  ellipse(moonX,moonY,130,130);
+  
+  //Landscape for background
+  stroke(165,142,93);
+  strokeWeight(3);
+  
+  fill(234,200,125);
+  beginShape();
+  vertex(0,400);
+  vertex(100,380);
+  vertex(150,480); 
+  vertex(200,460);
+  vertex(300,400);
+  vertex(500,440);
+  vertex(700,480);
+  vertex(740,490);
+  vertex(900,460);
+  vertex(980,420);
+  vertex(1100,450);
+  vertex(1300,480);
+  vertex(1300,820);
+  vertex(0,820);
+  endShape(CLOSE);
+  rect(650,650,1300,300);
+  
+} 
+
+void YouLose(){
+  image(darth,0,0);
+}
+
+void keyPressed(){
+  myMillFalcon.keyPressed(); // the global keyPressed function calls the Movement class keyPressed method.  
+}
+
+void keyReleased(){
+  myMillFalcon.keyReleased(); // the global keyReleased function calls the Movement class keyReleased method.
+}
+class MillFalcon{
+  int centerX,centerY,offset1,offset2,offsetX1,offsetX2,beamX,beamY,beamSpeed;
+  boolean keys[];    // In this array, the index corresponds with W,S,A,D.
+  
+  int xVelocity, yVelocity;
+  int pressed = 0;
+  int pressedState = 0;
+  boolean mState = false;
+  
+  // constructor
+  MillFalcon(){
+    centerX = 300;
+    centerY = round(random(0, height));
+    offset1 = -20;
+    offset2 = +20;
+    offsetX1 = -20;
+    offsetX2 = + 20;
+    beamX+= centerX+=xVelocity;
+    beamY+=centerY+=yVelocity;
+    beamSpeed=10;
+    
+    keys = new boolean [4];
+  }
+  
+  // creates the Millenium Falcon.
+  void display(){  
+    rectMode(CENTER);
+    image(fal,centerX,centerY);  
+  }
   
   
-  int playerX = 400;
-int playerY = 300;
-int xspeed = 0;
-int yspeed = 0;
-float playerHealth = 100;
-
-
-
-class Player {
-
-  void display() {
-    fill(#000AFF);
-    ellipseMode(CENTER);
-    ellipse(playerX, playerY, 30, 30);
-    textSize(30);
-    fill(255);
-    text("Health: " + round(playerHealth), 15, 35);
-    text("Wave: " + wave, 600, 35);
+  //Collision of tie fighter into Falcon
+  boolean intersect(TieFighter d){
+      println(dist(centerX, centerY, d.tieX, d.tieY));
+    if(dist(centerX, centerY, d.tieX, d.tieY) <200){
+      println("centerX: " + centerX + ", centerY: " + centerY + ", tieX: " + d.tieX + ", tieY: " + d.tieY);
+      return true;
+    } else{
+      return false;
+    }
+    
+ 
+  //boolean intersect(TieFighter d){
+  //  if((centerX == d.tieX)&&(centerY==d.tieY)){
+  //    println("centerX: " + centerX + ", centerY: " + centerY + ", tieX: " + d.tieX + ", tieY: " + d.tieY);
+  //    return true;
+  //  } else{
+  //    return false;
+  //  }
+    
   }
-
-  void update() { //player cannot go outside the map
-    playerX += xspeed;
-    playerY += yspeed;
-
-    if (playerX >= width) {
-      playerX = width - 1;
+  
+  void update(){
+    if (keys[0]){
+      yVelocity = -5;
     }
-    if (playerX <= 0) {
-      playerX = 1;
+    if(keys[1]){
+      yVelocity = 5;
     }
-    if (playerY <= 0) {
-      playerY = 1;
+    if(keys[2]){
+      xVelocity = -5;
     }
-    if (playerY >= height) {
-      playerY = height - 1;
+    if(keys[3]){
+      xVelocity = 5;
     }
+    if(!keys[2] && !keys[3]){ // if both Left and Right are released, horizontal velocity should be zero.
+      xVelocity = 0;
+      //println("no left or right");
+    }
+    if(!keys[0] && !keys[1]){ // if both Up and Down are released, vertical velocity should be zero.
+      yVelocity = 0;
+      //println("no left or right");
+    }
+    centerX += xVelocity;
+    centerY += yVelocity;
   }
+  
+  
+  void keyPressed(){
+    if(key == 'w'){
+      keys[0] = true;
+    } 
+    if(key == 's'){
+      keys[1] = true;
+    }
+    if(key == 'a'){
+      keys[2] = true;
+    }
+    if(key == 'd'){
+      keys[3] = true;
+    } 
+  }
+  
+  void keyReleased(){ // the 
+    println("Keyreleased " + key);
+    if(key == 'w'){
+      keys[0] = false;
+    } 
+    if(key == 's'){
+      keys[1] = false;
+    }
+    if(key == 'a'){
+      keys[2] = false;
+    }
+    if(key == 'd'){
+      keys[3] = false;
+    } 
+  }   
+}
+class TieFighter{
+  int tieX,tieY,tieSpeedX,tieSpeedY;
+  
+  TieFighter(){
+    tieX=1300;
+    tieY=round(random(0,height));
+    tieSpeedX=5;
+    tieSpeedY=round(random(1,10));
+    
+  }
+  
+  
+void display(){
+  
+  rectMode(CENTER);
+  fill(200);
+  stroke(0);
+  strokeWeight(1);
+  
+  ellipse(tieX,tieY,20,20);
+  beginShape();
+  vertex(tieX-10,tieY-20);
+  vertex(tieX+10,tieY-20);
+  vertex(tieX+20,tieY);
+  vertex(tieX+10,tieY+20);
+  vertex(tieX-10,tieY+20);
+  vertex(tieX-20,tieY);
+  endShape(CLOSE);
+  
+  fill(0);
+  beginShape();
+  vertex(tieX-6,tieY-16);
+  vertex(tieX+6,tieY-16);
+  vertex(tieX+16,tieY);
+  vertex(tieX+6,tieY+16);
+  vertex(tieX-6,tieY+16);
+  vertex(tieX-16,tieY);
+  endShape(CLOSE);
+  fill(200);
+  ellipse(tieX,tieY,10,10);
+  
 }
 
-
-
-int accuracy;
-
-
-class Shooting {
-
-  void crosshair() {
-    //draw the crosshair, size is based on gun
-    if (gun == 1) {
-      accuracy = 20;
-    }
-    if (gun == 2) {
-      accuracy = 15;
-    }
-    if (gun == 3) {
-      accuracy = 30;
-    }
-    if (gun == 4) {
-      accuracy = 40;
-    }
-
-
-
-    noFill();
-    ellipseMode(CENTER);
-    ellipse(mouseX, mouseY, accuracy, accuracy);
-    line(mouseX, mouseY - accuracy, mouseX, mouseY + accuracy);
-    line(mouseX - accuracy, mouseY, mouseX + accuracy, mouseY);
-  }
+void move(){
+  tieX = tieX + tieSpeedX;
+  tieY = tieY + tieSpeedY;
 }
-
-
-
-class Store {
-
-  PImage pistol;
-  PImage deagle;
-  PImage m4;
-  PImage uzi;
-  String gunName;
-
-  void load() {
-    background(255);
-    pistol = loadImage("pistol.jpg");
-    deagle = loadImage("deagle.jpg");
-    m4 = loadImage("m4a1.jpg");
-    uzi = loadImage("uzi.jpg");
-
-    if (store == true) {
-
-      image(pistol, 0, 0, 300, 200);
-      fill(0);
-      textSize(30);
-      text("Beretta", 30, 250);
-      textSize(20);
-      text("Medium Accuracy", 30, 270);
-
-      image(uzi, 400, 0, 300, 200);
-      fill(0);
-      textSize(30);
-      text("Uzi", 400, 250);
-      textSize(20);
-      text("Low Accuracy, Move Faster", 400, 270);
-
-      image(deagle, 0, 280, 300, 200);
-      fill(0);
-      textSize(30);
-      text("Desert Eagle", 30, 500);
-      textSize(20);
-      text("High Accuracy, Move Slower", 30, 520);
-
-      image(m4, 360, 280, 450, 200);
-      fill(0);
-      textSize(30);
-      text("M4-A1", 400, 500);
-      textSize(20);
-      text("Highest Accuracy, Move Slowest", 400, 520);
-
-      if (gun == 1) {
-        gunName = "BERETTA";
-      }
-
-      if (gun == 2) {
-        gunName = "UZI";
-      }
-
-      if (gun == 3) {
-        gunName = "DESERT EAGLE";
-      }
-
-      if (gun == 4) {
-        gunName = "M4-A1";
-      }
-
-      textSize(20);
-      text("Your gun is: " + gunName + " Press SPACE to start", 30, 570);
-    }
-  }
 }
-
-
-
-class TimerforSpawning {
-
-  int startingTime;
-  int duration;
-
-  TimerforSpawning(int totalTime) {
-    duration = totalTime;
+  
+//timer for game. Randomly drops tie fighters into game
+class Timer{
+  float startTime, stopTime; 
+   boolean started = false;   
+  
+  
+  Timer(float _stopTime){
+    stopTime = _stopTime;
   }
-
-  void start() {
-    startingTime = millis();
+  
+  
+  void timerStart(){
+    startTime = millis();
+    started = true;
   }
-
-  boolean isDone() {
-    int passedTime = millis() - startingTime;
-    if (passedTime > duration) {
+  
+  void stopTimer(){
+    started = false;
+    println("time stopped");
+  }
+  
+  
+boolean isFinished(){
+    float passedTime = millis() - startTime;
+    if((passedTime > stopTime) && (started)) {
       return true;
     } else {
       return false;
-    }
-  }
-}
-
-
-
-
-int zombieX = 30;
-int zombieY = 30;
-float zombieSpeed = 1.0;
-int[][] zombieSpawn = { {10, 10}, {60, 10}, {910, 890}, {750, 600}, {510, 1000}, {880, 10}, {700, 800}, {456, 32}, {356, 800}, {900, 100}, {234, 30} };
-int corner;
-boolean canSpawn = true;
-int wave = 0;
-int kills = 0;
-
-
-class Zombies {
-
-  void display() {
-
-    fill(255, 0, 0);
-    ellipseMode(CENTER);
-    for (int x = 0; x <= wave; x++) {
-      ellipse(zombieSpawn[x][0], zombieSpawn[x][1], 20, 20);
-    }
-  }
-
-  void update() {  
-    //zombies follow player at set speed
-    for (int w = 0; w <= wave; w++) {
-
-      if (zombieSpawn[w][0] > playerX) {
-        zombieSpawn[w][0] -= zombieSpeed;
-      }
-
-      if (zombieSpawn[w][0] < playerX) {
-        zombieSpawn[w][0] += zombieSpeed;
-      }
-
-      for (int z = 0; z <= wave; z++) {
-
-        if (zombieSpawn[z][1] > playerY) {
-          zombieSpawn[z][1] -= zombieSpeed;
-        }
-
-        if (zombieSpawn[z][1] < playerY) {
-          zombieSpawn[z][1]+= zombieSpeed;
-        }
-
-
-        //Player getting hit by zombie
-        for (int r = 0; r <= wave; r++) {
-          if (zombieSpawn[r][0] == playerX && zombieSpawn[r][0] == playerX && zombieSpawn[r][1] == playerY && zombieSpawn[r][1] == playerY) {
-            //player is dead
-            playerHealth -= 0.05;
-            if (playerHealth < 1.0) {
-              playerHealth = 0;
-              isDead = new Dead();
-              isDead.display();
-            }
-          }
-
-          //is the player shooting?
-          if (game == true && menu == false && store == false) {
-            if (mousePressed == true) {
-              shooting = true;
-            }
-            if (mousePressed == false) {
-              shooting = false;
-            }
-          }
-
-          //shooting zombies
-          if (shooting == true) {
-            if (zombieSpawn[r][0] < mouseX + accuracy && zombieSpawn[r][0] > mouseX - accuracy && zombieSpawn[r][1] > mouseY - accuracy && zombieSpawn[r][1] < mouseY + accuracy) {
-              zombieSpawn[r][0] = (round(random(0, 1000)));
-              zombieSpawn[r][1] = (round(random(0, 1000)));
-              kills += 1;
-              if (kills == ((wave + 1) * (wave + 5)) ) {
-                myTimer.start();
-                wave += 1;
-                if (wave > 10) {
-                  wave = 10;
-                }
-                zombieSpeed += 0.25;
-              }
-            }
-          }
-        }
-      }
     }
   }
 }
