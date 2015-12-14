@@ -1,0 +1,636 @@
+<html>
+  <header>
+  <script src="https://raw.githubusercontent.com/processing-js/processing-js/v1.4.8/processing.js"></script>
+  </header>
+  <h1>Your FINAL SKETCH Title</h1>
+  <script type="text/processing" data-processing-target="mycanvas-final">
+  
+  
+
+  </script>
+  <canvas id="mycanvas-final"></canvas>
+  <p>Description: On my FINAL SKETCH ASSIGNMENT</p>
+        <br />
+        <br />
+  <h1>Orb_of_Power.pde</h1>
+  <script type="text/processing" data-processing-target="mycanvas1">
+  
+  int player1x = 60;
+int player2x = 940;
+int player1y = 60;
+int player2y = 540;
+int speed = 20;
+float player1health = 100;
+float player2health = 100;
+boolean game = false;
+float orbx = 500;
+float orby = 300;
+boolean menu = true;
+
+void setup(){
+  size(1010, 600);
+} //end setup
+
+void draw(){
+  if (player1health < 1) {
+   player2wins();
+ }
+ 
+ if (player2health < 1) {
+   player1wins();
+ }
+  
+  rectMode(CENTER);
+  if (menu == true) {
+    background(#87118E);
+    textSize(70);
+    fill(random(0, 255), random(0, 255), random(0, 255));
+    text("Orb of Power", 290, 75);
+    
+    //play button
+    noFill();
+    rect(515, 150, 300, 50);
+    fill(255);
+    textSize(45);
+    text("Play", 470, 165);
+    
+    //quit button
+    noFill();
+    rect(515, 250, 300, 50);
+    fill(250);
+    textSize(45);
+    text("Quit", 470, 265);
+    
+    //player 1 instructions
+    textSize(25);
+    fill(#38FA1C);
+    text("Player 1, use WASD to move", 10, 200);
+    text("Use C and V to shoot", 10, 230);
+    
+    //player 2 instructions
+    fill(#FF9100);
+    text("Player 2, use 8546 to move", 675, 200);
+    text("Use < and > to shoot", 675, 230);
+    
+    //orb instructions
+    textSize(45);
+    fill(random(0, 255), random(0, 255), random(0, 255));
+    text("Touching the Orb of Power restores health!", 40, 450);
+
+  }
+  
+  ellipseMode(CENTER);
+  rectMode(CORNER);
+  if (game == true) {
+  
+   background(#87118E);
+   
+   fill(255);
+   textSize(30);
+   text("Player 1 Health: " + round(player1health), 10, 30);
+   text("Player 2 Health: " + round(player2health), 700, 30);
+  
+  //player 1
+  fill(#38FA1C);
+  ellipse(player1x, player1y, 50, 50);
+  
+  if (player1x > width) {
+     player1x = width - 1;
+  }
+  
+  if (player1y > height) {
+     player1y = height - 1;
+  }
+  
+  if (player1y < 0) {
+     player1y = 1;
+  }
+
+if (player1x < 0) {
+     player1x = 1; 
+  }
+
+//player 2 
+  fill(#FF9100);
+  ellipse(player2x, player2y, 50, 50);
+  
+  if (player2x > width) {
+     player2x = width - 1;
+  }
+  
+  if (player2y > height) {
+     player2y = height - 1;
+  }
+  
+  if (player2y < 0) {
+     player2y = 1;
+  }
+
+if (player2x < 0) {
+     player2x = 1; 
+  }
+
+  }
+
+    orb();
+
+} 
+//end draw
+
+void keyPressed(){
+  
+ //player 1 moving
+  
+  if (game == true) {
+  
+  if (key == 'd') {
+    player1x = player1x + speed;
+  }
+  if (key == 'a') {
+   player1x = player1x - speed;
+  }
+  if (key == 'w') {
+   player1y = player1y - speed; 
+  }
+  if (key == 's') {
+   player1y = player1y + speed; 
+  }
+
+//player 2 moving
+  
+  if (key == '6') {
+    player2x = player2x + speed;
+  }
+  if (key == '4') {
+   player2x = player2x - speed;
+  }
+  if (key == '8') {
+   player2y = player2y - speed; 
+  }
+  if (key == '5') {
+   player2y = player2y + speed; 
+  }
+
+
+//player 1 shooting
+
+  if (key == 'c') {
+    fill(#FFF81A);
+    rect(player1x, player1y, -120, 15);
+    if (player2x < player1x) { 
+      if (player2x > player1x - 150) {
+        if (player2y == player1y) {
+          player2hitbyBullet();
+        }
+        }
+      }
+    }
+  
+  
+  if (key == 'v') {
+    fill(#FFF81A);
+    rect(player1x, player1y, 120, 15);
+    if (player2x > player1x) { 
+      if (player2x < player1x + 150) {
+        if (player2y == player1y) {
+          player2hitbyBullet();
+        }
+      }
+    }
+  }
+
+//player 2 shooting
+  if (key == ',') {
+    fill(#FFF81A);
+    rect(player2x, player2y, -120, 15);
+    if (player1x < player2x) { 
+      if (player1x > player2x - 150) {
+        if (player1y == player2y) {
+          player1hitbyBullet();
+        }
+      }
+    }
+    
+  }
+
+  if (key == '.') {
+    fill(#FFF81A);
+    rect(player2x, player2y, 120, 15);
+    if (player1x > player2x) { 
+      if (player1x < player2x + 150) {
+        if (player1y == player2y) {
+          player1hitbyBullet();
+        }
+      }
+    }
+  }
+  }
+  
+  if (key == 'r') {
+    if (game == false) {
+      if (menu == false) {
+        game = true;
+        menu = false;
+        player1health = 100;
+        player2health = 100;
+        stroke(0);
+        player1x = 60;
+        player2x = 940;
+        player1y = 60;
+        player2y = 540;
+      }
+    }
+  }
+}  //end key pressed
+
+void player2hitbyBullet() {
+ player2health = player2health - 2;
+ fill(0);
+ ellipse(player2x, player2y, 50, 50);
+ 
+ if (player2health < 1) {
+    player1wins();  
+ }
+}
+
+void player1hitbyBullet() {
+ player1health = player1health - 2;
+ fill(0);
+ ellipse(player1x, player1y, 50, 50);
+ 
+ if (player1health < 1) {
+   player2wins();
+ }
+}
+
+void player1wins() {
+ game = false;
+ menu = false;
+ background(0);
+ fill(#38FA1C);
+ textSize(80);
+ text("The Greenians Win!", 125, 100);
+ textSize(30);
+ 
+ for (int circles = 1; circles < 10; circles++) {
+   noFill();
+   stroke(#38FA1C);
+   ellipse(width / 2, height / 2, (circles * 40),  (circles * 40));
+ }
+ fill(random(0, 255), random(0, 255), random(0, 255));
+   ellipse(width / 2, height / 2, 40, 40);
+   fill(#38FA1C);
+textSize(30);
+   text("Press R to restart", 375, height - 30);
+   
+}
+ void player2wins() {
+   game = false;
+   menu = false;
+   background(0);
+   fill(#FF9100);
+   textSize(80);
+   text("The Orangians Win!", 125, 100);
+   textSize(30);
+   text("Press R to restart", 375, height - 30);
+  
+  for (int circles = 1; circles < 10; circles++) {
+   noFill();
+   stroke(#FF9100);
+   ellipse(width / 2, height / 2, (circles * 40),  (circles * 40));
+  }
+  fill(random(0, 255), random(0, 255), random(0, 255));
+  ellipse(width / 2, height / 2, 40, 40);
+}
+
+void orb() {
+  
+  if (game == true) {
+  
+  fill(random(0, 255), random(0, 255), random(0, 255));
+  ellipse(orbx, orby, 40, 40);
+  float orbChangex = (random(-10, 10));
+  float orbChangey = (random(-10, 10));
+  orbx = orbx + orbChangex;
+  orby = orby + orbChangey;
+  
+  if (orbx > width) {
+     orbx = width - 1;
+  }
+  
+  if (orby > height) {
+     orby = height - 1;
+  }
+  
+  if (orby < 0) {
+     orby = 1;
+  }
+
+if (orbx < 0) {
+     orbx = 1; 
+  }
+  
+  if (orbx < player1x + 50) {
+    if (orbx > player1x - 50) {
+      if (orby > player1y - 50) {
+        if (orby < player1y + 50) {
+        player1health = player1health + 0.05;
+      }
+    }
+  }
+ }
+ 
+ if (orbx < player2x + 50) {
+    if (orbx > player2x - 50) {
+      if (orby > player2y - 50) {
+        if (orby < player2y + 50) {
+        player2health = player2health + 0.05;
+      }
+    }
+  }
+ }
+ 
+ if (player2health > 100) {
+   player2health = 100;
+ }
+ 
+ if (player1health > 100) {
+   player1health = 100;
+ }
+  
+  }
+}
+   
+   void mousePressed() {
+     if (menu == true) {
+       if (game == false) {
+         if (mouseX > 215 && mouseX < 815 && mouseY < 200 && mouseY > 100) {
+           game = true;
+           menu = false;
+         }
+       }
+     }
+     if (menu == true) {
+       if (game == false) {
+         if (mouseX > 215 && mouseX < 815 && mouseY < 300 && mouseY > 100) {
+           exit();
+         }
+       }
+     }
+ }
+
+  
+
+
+  </script>
+  <canvas id="mycanvas1"></canvas>
+  <p>Description: This is an epic battle between the Orangians and the Greenians, two enemy alien species. Instrucions are on the main menu. The objective is simple: eliminate your opponent.</p>
+        <br />
+        <br />
+  <h1>Soccer.pde</h1>
+  <script type="text/processing" data-processing-target="mycanvas2">
+  
+  //This is a game based on soccer. 
+//Your objective is to get the ball passed the goalie as many times as you can.
+//Click to launch the ball in a straight line.
+//Press SPACE to start the next round. Press Q to reset the score.
+//For each goal you score, the speed of the goalie increases.
+
+
+
+
+int y = 50;
+int speed;
+boolean grounded = false;
+int x = 100;
+int ballSpeed;
+boolean moving = false;
+boolean crossLine = false;
+boolean stopped = false;
+int ballY;
+int score = 0;
+boolean canScore = true;
+int rectHeight = 150;
+int highScore;
+
+void setup() {
+  size(800, 600); 
+}
+
+void draw() {
+  
+  background(#26AA13);
+  
+  textSize(30);
+  text("Score: " + score, 30, 30);
+  text("High Score: " + highScore, 550, 30);
+  textSize(15);
+  text("Press SPACE to reset, and Q to reset score", 10, height - 10);
+  
+  //center line
+ rect(width / 2, 0, 30, height);
+  
+  //Soccer Ball
+  ellipse(x, ballY, 60, 60);
+  
+  //Goalie
+  rect(650, y, 60, rectHeight);
+ 
+  //if goalie is on bottom
+  if (y >= height - rectHeight){
+      grounded = true;
+    }
+ 
+ //if goalie is on top
+ if (y <= 0){
+   grounded = false;
+ }
+ 
+ //adjust speed
+ if (grounded == true){
+   speed = -25 - (5 * score);
+ } else {
+   speed = 25 + (5 * score);
+ }
+ y = y + speed;
+
+//checks if ball is "touching" goalie on x-coordinates
+if (x >= 605) {
+    crossLine = true;
+}
+
+//checks the same with y-coordinate
+if (crossLine == true) {
+  if (ballY < y + rectHeight && ballY > y) {
+    stopped = true;
+    moving = false;
+  }
+} 
+ 
+//allows ball to follow cursor right away
+  if (moving == false){
+    ballY = mouseY;
+  }
+
+//makes ball stop moving and 'stick' to goalie (catch)
+if (stopped == true){
+  moving = false;
+  ballSpeed = 0;
+  ballY = y;
+}
+
+//Ball Kick
+if (moving == true){
+  ballSpeed = 40;
+  x = x + ballSpeed;
+  }
+
+//"Winner" appears
+if (x > 799){
+  for (int messages = 50; messages < 450; messages = messages + 30){
+    
+    fill(0);
+    textSize(40);
+    text("Winner!", messages + 60, messages + 60);
+    fill(255);
+    score();
+  }
+    
+  }
+  
+if (stopped == true && moving == false && x < 799){
+
+  x = 100;
+  y = 50;
+  crossLine = false;
+  stopped = false;
+  moving = false;
+  canScore = true;
+  score = 0;
+  draw();
+  
+  
+}
+
+}
+//Kick Ball
+void mousePressed(){
+  moving = true;
+}
+//Press a key to restart
+void keyPressed(){
+  if (key == 'q'){
+    score = 0;
+    highScore = 0;
+  }
+  
+  if (key == ' '){
+    
+  x = 100;
+  y = 50;
+  crossLine = false;
+  stopped = false;
+  moving = false;
+  canScore = true;
+  draw();
+  }
+  
+}
+
+void score(){
+  if (canScore == true){
+  score = score + 1;
+  canScore = false;
+  }
+  
+  if (score > highScore){
+   highScore = score; 
+  }
+  
+  
+}
+
+  </script>
+  <canvas id="mycanvas2"></canvas>
+  <p>Description: This is a sports game based on soccer. The object is to score as many goals as possible. Click to kick the ball, then press space to start the next round. Each goal you score increases the goalie's speed.</p>
+        <br />
+        <br />
+  <h1>Space_Needle.pde</h1>
+  <script type="text/processing" data-processing-target="mycanvas3">
+  
+  void setup() {
+size(500, 500);
+background(0, 0, 80);
+ellipseMode(CENTER);
+ellipse(250, 100, 50, 10);
+//bottom circle
+line(240, 100, 250, 200);
+//top left line
+line(260, 100, 250, 200);
+//top right line
+line(250, 200, 240, 350);
+//bottom left line
+line(250, 200, 260, 350);
+//bottome right line
+ellipse(250, 95, 60, 7);
+//middle circle
+ellipse(250, 90, 55, 7);
+//top circle
+fill(255, 0, 0);
+ellipseMode(CORNER);
+ellipse(248, 66, 5, 5);
+//red dot
+line(250, 72, 250, 85);
+//line connecting red dot
+fill(0, 0, 0);
+rectMode(CORNER);
+rect(249, 100, 1, 125);
+rect(249, 225, 2, 125);
+//center line (top, bottom)
+
+
+rectMode(CENTER);
+rect(250, 500, 500, 350);
+//ground
+stroke(255, 255, 0);
+point(100, 100);
+point(134, 126);
+point(200, 50);
+point(174, 38);
+point(25, 120);
+point(280, 115);
+point(285, 110);
+point(255, 50);
+point(450, 60);
+point(430, 67);
+point(400, 59);
+point(360, 74);
+
+
+};
+
+  </script>
+  <canvas id="mycanvas3"></canvas>
+  <p>Description: This is a simple sketch of the space needle. I chose this because it was my first sketch ever made in Processing. </p>
+        <br />
+        <br />
+  <h1>Your Sketch4 Title</h1>
+  <script type="text/processing" data-processing-target="mycanvas4">
+  
+  <!-- Your sketch4 goes here -->
+
+  </script>
+  <canvas id="mycanvas4"></canvas>
+  <p>Description:</p>
+        <br />
+        <br />
+  <h1>Your Sketch5 Title</h1>
+  <script type="text/processing" data-processing-target="mycanvas5">
+  
+  <!-- Your sketch5 goes here -->
+
+  </script>
+  <canvas id="mycanvas5"></canvas>
+  <p>Description:</p>
+  </body>
+</html>  
