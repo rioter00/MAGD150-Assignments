@@ -15,7 +15,7 @@
   <h1>Orb_of_Power.pde</h1>
   <script type="text/processing" data-processing-target="mycanvas1">
   
-  int player1x = 60;
+int player1x = 60;
 int player2x = 940;
 int player1y = 60;
 int player2y = 540;
@@ -76,7 +76,6 @@ void draw(){
     textSize(45);
     fill(random(0, 255), random(0, 255), random(0, 255));
     text("Touching the Orb of Power restores health!", 40, 450);
-
   }
   
   ellipseMode(CENTER);
@@ -378,9 +377,6 @@ if (orbx < 0) {
        }
      }
  }
-
-  
-
 
   </script>
   <canvas id="mycanvas1"></canvas>
