@@ -1,0 +1,87 @@
+using UnityEngine;
+using System.Collections;
+
+public class movementDemoScript_NH : MonoBehaviour {
+
+	[Header ("MoveTowards Details")]
+	public GameObject object2Move;
+	public Transform redFlag;
+	public Transform blueFlag;
+	[Range(0f, 10f)]
+	public float speed = .5f;
+
+	[Space(15)]
+	[Header ("Lerp Details")]
+	private bool lerpStarted = false;
+	private float lerpStartTime;
+	private float lerpJourneyLength;
+
+	[Space(15)]
+	[Header ("RotateToward")]
+	[Range(0f, 10f)]
+	private float rotateTowardSpeed; 
+	public Transform rotateTowardTarget;
+
+
+
+	// Use this for initialization
+	void Start () {
+
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		// ONE WAY TO DO IT - MoveTowards
+		//moveTowardsDemo ();
+
+
+		// ANOTHER WAY TO DO IT - Lerp
+		//startLerp ();
+		//lerpTowards ();
+
+		// YET ANOTHER WAY TO DO IT - PingPong - BACK AND FORTH FOREVER
+		//pingPong();
+
+
+	}
+
+
+	//	http://docs.unity3d.com/ScriptReference/Vector3.MoveTowards.html
+	//	public static Vector3 MoveTowards(Vector3 current, Vector3 target, float maxDistanceDelta);
+	void moveTowardsDemo(){
+		float step = speed * Time.deltaTime;
+		object2Move.transform.position = Vector3.MoveTowards(object2Move.transform.position, redFlag.position, step);
+	}
+		
+
+	// http://docs.unity3d.com/ScriptReference/Vector3.Lerp.html
+	// public static Vector3 Lerp(Vector3 a, Vector3 b, float t);
+	// Linearly interpolates between two vectors.
+	//Interpolates between the vectors a and b by the interpolant t. The parameter t is clamped to the range [0, 1]. This is most commonly used to find a point some fraction of the way along a line between two endpoints (e.g. to move an object gradually between those points).
+	void lerpTowards(){
+		float distCovered = (Time.time - lerpStartTime) * speed;
+		float fracJourney = distCovered / lerpJourneyLength;
+		object2Move.transform.position = Vector3.Lerp(redFlag.position, blueFlag.position, fracJourney);
+	}
+
+
+	void startLerp(){
+		if (!lerpStarted) {
+			lerpStartTime = Time.time;
+			lerpJourneyLength = Vector3.Distance (redFlag.position, blueFlag.position);
+			lerpStarted = true;
+		}
+	}
+
+
+	// http://docs.unity3d.com/ScriptReference/Mathf.PingPong.html
+	// public static float PingPong(float t, float length);
+	// blue flag to red flag
+	void pingPong(){
+		float pingPongDistance = (Vector3.Distance (blueFlag.position, redFlag.position));
+		object2Move.transform.position = new Vector3 (blueFlag.position.x - Mathf.PingPong (Time.time, pingPongDistance), object2Move.transform.position.y, object2Move.transform.position.z);
+	}
+
+
+
+}
